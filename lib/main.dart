@@ -1,4 +1,4 @@
-import 'dart:ffi';
+import 'dart:io' show Platform;
 
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String roundUpDisplay = "Enter Cost Below";
   String _resultString = "";
   double _result = 0;
+  String os = Platform.operatingSystem;
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +90,15 @@ class _MyHomePageState extends State<MyHomePage> {
                           fontSize: 16,
                         ),
                         textCapitalization: TextCapitalization.none,
-                        keyboardType: TextInputType.number,
+                        keyboardType: Platform.isIOS
+                            ? const TextInputType.numberWithOptions(
+                                decimal: true,
+                                signed: true,
+                              )
+                            : TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
                         minLines: 1,
                         maxLines: 1,
                         autofocus: true,
