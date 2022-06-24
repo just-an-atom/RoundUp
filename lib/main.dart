@@ -92,12 +92,20 @@ class _MyHomePageState extends State<MyHomePage> {
                         textCapitalization: TextCapitalization.none,
                         keyboardType: Platform.isIOS
                             ? const TextInputType.numberWithOptions(
+                                signed: false,
                                 decimal: true,
-                                signed: true,
                               )
                             : TextInputType.number,
                         inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
+                          FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+                          TextInputFormatter.withFunction((oldValue, newValue) {
+                            try {
+                              final text = newValue.text;
+                              if (text.isNotEmpty) double.parse(text);
+                              return newValue;
+                            } catch (e) {}
+                            return oldValue;
+                          }),
                         ],
                         minLines: 1,
                         maxLines: 1,
